@@ -1,0 +1,28 @@
+{
+  "entities": {
+    "Shop": {
+      "title": "Shop",
+      "description": "Configuration and content for a Tikkie Shop",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "tagline": { "type": "string" },
+        "logo": { "type": "string" },
+        "primaryColor": { "type": "string" },
+        "secondaryColor": { "type": "string" },
+        "theme": { "type": "string" },
+        "layout": { "type": "string" },
+        "modules": { "type": "object" },
+        "seo": { "type": "object" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "theme", "layout"]
+    }
+  },
+  "firestore": {
+    "/shops/{shopId}": {
+      "schema": "Shop",
+      "description": "Unique shop configurations"
+    }
+  }
+}

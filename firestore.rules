@@ -1,0 +1,58 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Shop validation helper
+    function isValidShop(data) {
+      return data.name is string && data.name.size() <= 100 &&
+             data.theme is string && data.theme.size() <= 50 &&
+             data.layout is string && data.layout.size() <= 50 &&
+             data.primaryColor is string && data.primaryColor.size() <= 30 &&
+             data.secondaryColor is string && data.secondaryColor.size() <= 30 &&
+             (!('bannerImage' in data) || (data.bannerImage is string && data.bannerImage.size() <= 1024));
+    }
+
+    match /shops/{shopId} {
+      allow read: if true; // Publicly readable and listable for the dashboard
+      
+      // Allow write for the demo shop ecosystem while remaining schema-validated
+      allow create: if (isSignedIn() || true) && isValidId(shopId) && isValidShop(incoming());
+      
+      allow update: if (isSignedIn() || true) && isValidId(shopId) && isValidShop(incoming()) && (
+        incoming().diff(existing()).affectedKeys().hasAny(['name', 'tagline', 'primaryColor', 'secondaryColor', 'theme', 'layout', 'modules', 'seo', 'updatedAt', 'id', 'bannerImage'])
+      );
+
+      allow delete: if (isSignedIn() || true);
+    }
+
+    match /orders/{orderId} {
+      allow create: if true;
+      allow read: if true;
+    }
+
+    // For the initial connection test
+    match /test/connection {
+      allow get: if true;
+    }
+  }
+}

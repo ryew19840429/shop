@@ -1,0 +1,10 @@
+{
+  "projectId": "adk-deployment-sample",
+  "appId": "1:139073331211:web:4c21f38a5c56a47d3d670e",
+  "apiKey": "AIzaSyADr2xYCuzSsShBya720rNGaoiPJUdOy2A",
+  "authDomain": "adk-deployment-sample.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-28a29efe-9372-499d-9444-9b88e381c77c",
+  "storageBucket": "adk-deployment-sample.firebasestorage.app",
+  "messagingSenderId": "139073331211",
+  "measurementId": ""
+}
